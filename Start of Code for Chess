@@ -1,0 +1,181 @@
+# Various necessary modules
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+import numpy as np
+
+# Chess board, no pieces:
+row = [1, -1, 1, -1, 1, -1, 1, -1] # Standard white-black chess-board pattern
+row_shift = row[7:] + row[:7] # Every other row
+board = np.array([row, row_shift, row, row_shift, row, row_shift, row, row_shift]) # Defining board as matrix
+scale = LinearSegmentedColormap.from_list("title", ["white", "black"]) # Position along this colour gradient defined by size
+
+def display():
+    plt.figure(figsize = (6, 6))
+    plt.ylim(ymin = -0.5, ymax = 7.5) # Going from -0.5 because (0,0) is the pixel itself
+    plt.imshow(board, scale) # Displays matrix, now colour-coded
+    
+class pos(): # Colours a square to indicate piece's position
+    
+    def paw(col,x,y): # Pawn's position
+        if col == "b":
+            board[x,y] = 3
+        elif col == "w":
+            board[x,y] = -3
+        
+    def kni(col,x,y): # Knghts's position
+        if col == "b":
+            board[x,y] = 5
+        elif col == "w":
+            board[x,y] = -5
+        
+    def bis(col,x,y): # Bishop's position
+        if col == "b":
+            board[x,y] = 7
+        elif col == "w":
+            board[x,y] = -7
+        
+    def cas(col,x,y): # Castle's position
+        if col == "b":
+            board[x,y] = 9
+        elif col == "w":
+            board[x,y] = -9
+        
+    def que(col,x,y): # Queen's position
+        if col == "b":
+            board[x,y] = 11
+        elif col == "w":
+            board[x,y] = -11
+        
+    def kin(col,x,y): # King's position
+        if col == "b":
+            board[x,y] = 15 # Not 13 because colour gradient odd
+        elif col == "w":
+            board[x,y] = -12.5 # Not -13 because colour gradient odd
+        
+def initial():
+    
+    pos.paw("b",6,0)
+    pos.paw("b",6,1)
+    pos.paw("b",6,2)
+    pos.paw("b",6,3)
+    pos.paw("b",6,4)
+    pos.paw("b",6,5)
+    pos.paw("b",6,6)
+    pos.paw("b",6,7)
+    
+    pos.cas("b",7,0)
+    pos.kni("b",7,1)
+    pos.bis("b",7,2)
+    pos.que("b",7,3)
+    pos.kin("b",7,4)
+    pos.bis("b",7,5)
+    pos.kni("b",7,6)
+    pos.cas("b",7,7)
+    
+    pos.cas("w",0,0)
+    pos.kni("w",0,1)
+    pos.bis("w",0,2)
+    pos.que("w",0,3)
+    pos.kin("w",0,4)
+    pos.bis("w",0,5)
+    pos.kni("w",0,6)
+    pos.cas("w",0,7)
+    
+    pos.paw("w",1,0)
+    pos.paw("w",1,1)
+    pos.paw("w",1,2)
+    pos.paw("w",1,3)
+    pos.paw("w",1,4)
+    pos.paw("w",1,5)
+    pos.paw("w",1,6)
+    pos.paw("w",1,7)
+    
+    display()
+    
+class move():
+    
+    # Might need to initialise this class with inputted x/y-values, so that responds properly to user
+    
+    def identify_piece(x,y): # Works out what piece user's referring to
+        if board[y,x] == -12.5: # [y,x] seems wrong way round, but that's just np.array having unconventional indexing
+            print("White king")
+            k(x,y)
+        elif board[y,x] == -11:
+            print("White queen")
+            q(x,y)
+        elif board[y,x] == -9:
+            print("White castle")
+            c(x,y)
+        elif board[y,x] == -7:
+            print("White bishop")
+            b(x,y)
+        elif board[y,x] == -5:
+            print("White knight")
+            kn(x,y)
+        elif board[y,x] == -3:
+            print("White pawn")
+            p(x,y)
+        elif board[y,x] == -1:
+            print("White unoccupied")
+        elif board[y,x] == 1:
+            print("Black unoccupied")
+        elif board[y,x] == 3:
+            print("Black pawn")
+            p(x,y)
+        elif board[y,x] == 5:
+            print("Black knight")
+            kn(x,y)
+        elif board[y,x] == 7:
+            print("Black bishop")
+            b(x,y)
+        elif board[y,x] == 9:
+            print("Black castle")
+            c(x,y)
+        elif board[y,x] == 11:
+            print("Black queen")
+            q(x,y)
+        elif board[y,x] == 15:
+            print("Black king")
+            k(x,y)
+            
+    def k(x,y): # Moves king
+        return
+    
+    def q(x,y): # Moves queen
+        return
+    
+    def c(x,y): # Moves castle
+        return
+    
+    def b(x,y): # Moves bishop
+        return
+    
+    def kn(x,y): # Moves knight
+        return
+    
+    def bp(x,y): # Moves black pawn, ie., down
+        
+        if x < 7: # If we're not on the top row, ie., we can go up
+            up = [y, x+1] # Again, np.array has weird indexing
+        else:
+            up = "test"
+        
+        right = [y+1, x]
+        
+        down = [y, x-1]
+        
+        left = [y-1, x]
+        print("Where would you like to move to?: \n A:", up, "\n B:", right, "\n C:", down, "\n D:", left)
+        return
+    
+    def wp(x,y): # Moves white pawn, ie., up
+        
+        if turn_count == 1: # Future Josh: define this!
+            # Move one or two
+        else:
+            if x < 7: # If we're not on top row, ie., we actually can move up
+                print("Where would you like to move to?: \n
+            
+initial()
+move.p(7,7)
